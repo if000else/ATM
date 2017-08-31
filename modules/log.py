@@ -11,7 +11,7 @@ def set_log(type,level,message):
     :return:
     '''
     file_name = "%s/%s.log"%(PathOfLog,type)
-    logging.basicConfig(filename=file_name,format="%(asctime)s [%(levelname)s]>>:%(message)s",
+    logging.basicConfig(filename=file_name,format="%(asctime)s [%(levelname)s] : %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S",level=20)
     if level == 10:
         logging.debug(message)
