@@ -1,4 +1,11 @@
-2017-08-30 23:35:57 [INFO]>>:User alex attempts to login!
-2017-08-30 23:35:59 [INFO]>>:User alex  login successfully!
-2017-08-31 09:44:55 [INFO]>>:User alex attempts to login!
-2017-08-31 09:44:57 [INFO]>>:User alex  login successfully!
+2017-08-31 14:47:36 [INFO] : User alex attempts to login!
+2017-08-31 14:47:39 [INFO] : User alex  login successfully!
+2017-08-31 14:48:14 [INFO] : User alex pay successfully!
+2017-08-31 14:49:05 [INFO] : User alex repay successfully!
+2017-08-31 14:53:54 [INFO] : User alex attempts to login!
+2017-08-31 14:53:56 [INFO] : User alex  login successfully!
+2017-08-31 14:55:05 [INFO] : User alex transfer successfully!
+2017-08-31 15:01:21 [INFO] : User alex attempts to login!
+2017-08-31 15:01:23 [INFO] : User alex  login successfully!
+2017-08-31 15:01:47 [INFO] : User alex repay successfully!
+2017-08-31 15:02:27 [ERROR] : User alex transfer failed, error!

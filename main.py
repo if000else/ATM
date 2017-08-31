@@ -1,5 +1,4 @@
 import sys,os,time
-from conf import config
 from modules import functions
 from modules import creditcard
 from modules import api_func
@@ -22,6 +21,11 @@ def auth_user(fun):
     return wrapper
 
 def auth_admin(fun):
+    '''
+    decorator for admin authorization
+    :param fun:
+    :return:
+    '''
     def wrapper(*args,**kwargs):
         if auth_tool["admin"]:
             fun(*args,**kwargs)
@@ -30,18 +34,30 @@ def auth_admin(fun):
     return wrapper
 @auth_admin
 def freeze(car_number):
+    '''
+    modify user card freeze flag to opposite state
+    :param car_number:
+    :return:
+    '''
     data = api_func.db_hander("select","card_info")
     flag = data[car_number]["freeze"]
     data[car_number]["freeze"] = not flag # convert freeze status
-    print("freeze successful!")
+    print("freeze/unfreeze!")
     api_func.db_hander("modify","card_info",data)
 @auth_admin
 def create_card(card_info):
     pass
 @auth_admin
 def mag_credit(car_number):
-    data = api_func.db_hander("select", "card_info")
+    '''
+    modify user card credit
+    :param car_number:
+    :return:
+    '''
     try:
+        data = api_func.db_hander("select", "card_info")
+        print("Your current credit:",data[car_number]["credit"])
+
         credit_input = input("\033[1;33;1m Input amount>>:\033[0m")
         data[car_number]["credit"] = float(credit_input)  # modify freeze flag
     except Exception as e:
@@ -52,16 +68,22 @@ def mag_credit(car_number):
     api_func.db_hander("modify", "card_info", data)
 @auth_admin
 def mag_change(car_number):
-    data = api_func.db_hander("select", "card_info")
+    '''
+    modify user card change
+    :param car_number:
+    :return:
+    '''
     try:
+        data = api_func.db_hander("select", "card_info")
+        print("Your current change:", data[car_number]["change"])
         change_input = input("\033[1;33;1m Input amount>>:\033[0m")
-        data[car_number]["change"] = change_input  # modify freeze flag
+        data[car_number]["change"] = float(change_input)  # modify freeze flag
     except Exception as e:
         if e:
             functions.colordisplay("Input error!","red")
         else:
+            api_func.db_hander("modify", "card_info", data)
             print("Modify change successfully!")
-    api_func.db_hander("modify", "card_info", data)
 
 def store_payment(order_num,money,username):
     '''
@@ -73,16 +95,15 @@ def store_payment(order_num,money,username):
     :return:
     '''
     card_number = creditcard.find_user(username)# find card num by username
-    print("credit card num:",card_number)
+    print("Found your credit card:\033[1;34;1m%s\033[0m" % card_number)
     print("order:",order_num)
     print("aomount:%s yuan"%money)
     data = api_func.db_hander("select", "card_info")
     if data[card_number]["freeze"]:
-        functions.colordisplay("this card is frozen! payment is denied!","red")
+        functions.colordisplay("This card is frozen! payment is denied!","red")
     else:
         user_card = data[card_number]  # get user card info
         pay_psd = input("\033[1;33;1m Input pay password:\033[0m")
-        count = 0
         if pay_psd == user_card["pay_password"]:
             if user_card["change"] < money:
                 functions.colordisplay("Your balance is not enough!","red")
@@ -93,11 +114,7 @@ def store_payment(order_num,money,username):
                 return True
         else:
             functions.colordisplay("Sorry,pay password is incorrect!!!","red")
-            count += 1
-            if count >= 3:
-                data[card_number]["freeze"] = True#freeze card
-                print("User %s is frozen!"%username)
-                api_func.db_hander("modify", "card_info", data)  # write in file
+            log.set_log("transaction", 20, "User %s failed to pay because of incorrect pay_password!" % username)
     return False
 
 
@@ -127,7 +144,9 @@ def card_center(login_data):
                         print("Your card number: [%s]"%card_number)
                         detail = functions.inpmsg("[m] to display more...")
                         if detail == "m":
-                            print("Detail info: %s"%current_card)
+                            for k,v in current_card:
+                                print(k,':',v)
+
                     elif menu_choice == '3':# Repay
                         creditcard.repay(current_card)
                     elif menu_choice == '4':#Withdraw
@@ -151,6 +170,7 @@ def card_center(login_data):
 
 
 def main():
+    # try:
     flag_menu = True # end program
     while flag_menu:
         if auth_tool["auth"]: # already authorized
@@ -180,8 +200,7 @@ def main():
             flag_menu = False
         else:
             print("Invalid input!")
-
-    ###########
-    # rewrite userdata
+    # except Exception as e:
+    #     functions.colordisplay(e,"red")
 if __name__ == "__main__":
     main()

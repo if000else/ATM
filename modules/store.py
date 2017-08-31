@@ -1,10 +1,8 @@
 from modules import display
 from modules import functions
-from modules import creditcard
 from conf import config
 from modules import api_func
-# import main.store_payment
-import os,sys
+import os,sys,time
 path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.path.join(path)
 sys.path.append(path)
@@ -36,21 +34,26 @@ def shopping(autu_tool):
                 shop_car.update(new_dic)
                 print("Added to shop car...")
         elif choice == 'ok':
-            print("You have choose:")
-            print("number price amount")
-            for items in shop_car.values():
-                print(items["number"],' ',items["price"],' ',items["amount"])
+            if shop_car:
+                print("You have choose:")
+                print("number price amount")
+                for items in shop_car.values():
+                    print(items["number"],' ',items["price"],' ',items["amount"])
+            else:
+                functions.colordisplay("You didn't add any things!", 'red')
         elif choice == 'pay':
             if not shop_car: # shop_car is empty!!!
-               functions.colordisplay("You didn't add any goods!",'red')
+               functions.colordisplay("You didn't add any things!",'red')
             else:
                 print("Generating bill...")
+                time.sleep(2)
                 total = shop_car_dc(shop_car)#get total price
-                print("Generating order...")
                 order_num = api_func.gene_order(total,shop_car,autu_tool["name"])
                 print("Skipping to payment...")
+                time.sleep(2)
                 pay_flag = main.store_payment(order_num,total,autu_tool["name"])# call payment
                 if  pay_flag:# pay success
+                    api_func.user_bill(order_num,autu_tool["name"])
                     shop_car.clear()# clear shop car
                 else:
                     print("Pay failed,please check!")
@@ -71,10 +74,11 @@ def shop_car_dc(shop_car):
         price = float(i["price"])
         amount = float(i["amount"])
         total_price = total_price +  price * amount
-        print("{line}.   {num}  {price} {amount}".format(
+        print("{line}.  {num}  {price}   {amount}".format(
             line = str(line),num = i["number"],price = i["price"], amount = i["amount"]
         ) )
         line += 1
-    print("sum =",total_price)
+    print("sum =%s yuan"%total_price)
+    print(''.center(28,'-'))
 
     return total_price

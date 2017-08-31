@@ -42,9 +42,10 @@ shop_list = '''
 1009.RP            9.00    RMB
 
 
-[b] 'back'  [ok] 'add shop_car' [pay] 'pay money'
+[b] 'back'  [ok] 'shop_car' [pay] 'pay money'
 ------------------------------
 '''
 shop_car = '''
-seq  item  price   amount
+--------------------------
+Seq Item Price Quan
 '''

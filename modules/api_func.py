@@ -21,7 +21,7 @@ def db_hander(actions,filename,dic_data = None):
         elif actions == "modify":
             with open(file_path, "w") as f:
                 json.dump(dic_data,f)
-                print("\033[1;33;1m Write in file successful!\033[0m")
+                print("\033[1;34;1m Transaction is accept!\033[0m")
         else:
             print("\033[1;31;1mActions is invalid!\033[0m")
     else:
@@ -73,18 +73,25 @@ def gene_order(price,shop_car,username,save=False):
         f.write("Details:\n")
         for item in shop_car.values():
             f.write(item["number"] + '--' + str(item["price"]) + '--' + str(item["amount"]) + '\n')
-    path_order = "%s/%sBill.txt" % (PathOfReport, username)
-    with open(path_order, 'a+') as f1:
-        f1.write(time_create + ' ' + order_num + ' ' + username + price + 'yuan\n')
-        print("Order have write in  user file!")
+    # path_user = "%s/%sBill.txt" % (PathOfReport, username)
+    # with open(path_user, 'a+') as f1:
+    #     f1.write(time_create + ' ' + order_num + ' ' + username + price + 'yuan\n')
+    #     print("Order have write in  user file!")
     return order_num
-def pay_state(order_num):
+def user_bill(ordernum,username):
     '''
-    change the state of order num,pay or not.
+    find user order info with order num in order.txt
     :param ordernum:
     :return:
     '''
-    path = "%s/order.txt" % PathOfReport
+    import re
+    order_path = "%s/order.txt" % PathOfReport
+    user_path = "%s/%sBill.txt" % (PathOfReport, username)
+    with open(order_path,'r') as f1,open(user_path,'a+') as f2:
+        for line in f1:
+            find = re.search(ordernum,line)
+            if find:
+                f2.write(line)
 
 
 def see_bill(username):
