@@ -1,15 +1,5 @@
 import os,sys,logging
 
-#LOG
-LogOfLevel = 20 # INFO
-# PathOfLog = os.path.join(path,"log")
-
-LogOfTypes = {
-    'transaction': 'transactions.log',
-    'access': 'access.log',
-    'error':'error.log'
-}
-
 # Transaction
 TransType = {
     "repay":0,

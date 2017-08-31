@@ -1,6 +1,5 @@
 import sys,os,time
 from conf import config
-from modules import store
 from modules import functions
 from modules import creditcard
 from modules import api_func
@@ -9,6 +8,7 @@ from modules import store
 from modules.display import *
 
 auth_tool = dict(name =None, auth = False,admin = None,data = None) #check login
+
 def auth_user(fun):
     '''
     decorator
@@ -41,16 +41,26 @@ def create_card(card_info):
 @auth_admin
 def mag_credit(car_number):
     data = api_func.db_hander("select", "card_info")
-    credit_input = input("\033[1;33;1m Input amount>>:\033[0m")
-    data[car_number]["credit"] = credit_input  # modify freeze flag
-    print("modify credit successful!")
+    try:
+        credit_input = input("\033[1;33;1m Input amount>>:\033[0m")
+        data[car_number]["credit"] = float(credit_input)  # modify freeze flag
+    except Exception as e:
+        if e:
+            functions.colordisplay("Input error!","red")
+        else:
+            print("Modify credit successfully!")
     api_func.db_hander("modify", "card_info", data)
 @auth_admin
 def mag_change(car_number):
     data = api_func.db_hander("select", "card_info")
-    change_input = input("\033[1;33;1m Input amount>>:\033[0m")
-    data[car_number]["change"] = change_input  # modify freeze flag
-    print("modify change successful!")
+    try:
+        change_input = input("\033[1;33;1m Input amount>>:\033[0m")
+        data[car_number]["change"] = change_input  # modify freeze flag
+    except Exception as e:
+        if e:
+            functions.colordisplay("Input error!","red")
+        else:
+            print("Modify change successfully!")
     api_func.db_hander("modify", "card_info", data)
 
 def store_payment(order_num,money,username):
@@ -63,7 +73,9 @@ def store_payment(order_num,money,username):
     :return:
     '''
     card_number = creditcard.find_user(username)# find card num by username
-    print("card num:",card_number)
+    print("credit card num:",card_number)
+    print("order:",order_num)
+    print("aomount:%s yuan"%money)
     data = api_func.db_hander("select", "card_info")
     if data[card_number]["freeze"]:
         functions.colordisplay("this card is frozen! payment is denied!","red")
@@ -77,7 +89,7 @@ def store_payment(order_num,money,username):
             else:
                 data[card_number]["change"] -= money
                 api_func.db_hander("modify","card_info",data)#write in file
-                log.logger("transaction").info("Pay successfully!")
+                log.set_log("transaction",20,"User %s pay successfully!"%username)
                 return True
         else:
             functions.colordisplay("Sorry,pay password is incorrect!!!","red")
@@ -149,7 +161,6 @@ def main():
         if menu_choice == '1':
             if auth_tool["auth"]: # user want to logoff
                 auth_tool["auth"] = False
-                log.logger("access").info("User %s  logoff!" % auth_tool["name"])
             else: # user want to login
                 login_data = functions.login()
                 if login_data:

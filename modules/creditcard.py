@@ -43,12 +43,12 @@ def repay(card_info):
             data[card_number]["change"] = new_change
             api_func.db_hander("modify", "card_info",data)# write in file
             print("new change:",new_change)
-            log.logger("transaction").info("User %s repay successfully!"%card_info["username"])
+            log.set_log("transaction",20,"User %s repay successfully!"%card_info["username"])
         else:
             functions.colordisplay("Repay failed because of incorrect pay password!", "red")
-            log.logger("transaction").info("User %s failed to repay,because of incorrect password" %card_info["username"])
+            log.set_log("transaction",20,"User %s failed to repay,because of incorrect password" %card_info["username"])
     except Exception as e:
-        log.logger("error").error("User %s repay with error \n %s" %(card_info["username"],e))
+        log.set_log("errror",40,"User %s repay with error \n %s" %(card_info["username"],e))
 
 def withdraw(card_info):
     '''
@@ -75,11 +75,11 @@ def withdraw(card_info):
             print( new_change)
         else:
             functions.colordisplay("Repay failed because of incorrect pay password!", "red")
-            log.logger("transaction").info("User %s withdraw failed,wrong pay password!"%card_info["username"])
+            log.set_log("transaction",20,"User %s withdraw failed,wrong pay password!"%card_info["username"])
 
     except Exception as e:
         functions.colordisplay(e, "red")
-        log.logger("error").info("user %s withdraw failed, error!",card_info["username"])
+        log.set_log("error",40,"User %s withdraw failed, error!",card_info["username"])
 def transfer(card_info):
     '''
     call when user need to transfer
@@ -105,17 +105,17 @@ def transfer(card_info):
                 all_card_info[cur_card_number]["change"] -= new_change
                 all_card_info[trans_num]["change"] += float(change)  # receive account no interest
                 api_func.db_hander("modify", "card_info", all_card_info)  # Write in file
-                log.logger("transaction").info("user %s withdraw successfully!")
+                log.set_log("transaction",20,"User %s transfer successfully!"%card_info["username"])
 
             else:
                 functions.colordisplay("Can not find the card number!")
         else:
             functions.colordisplay("Pay password is incorrect!")
-            log.logger("transaction").info("user %s withdraw failed,wrong pay_password!"%card_info["username"])
+            log.set_log("transaction",20,"User %s transfer failed,wrong pay_password!"%card_info["username"])
 
     except Exception as e:
         functions.colordisplay(e, "red")
-        log.logger("error").info("user %s transfer failed, error!", card_info["username"])
+        log.set_log("error",40,"User %s transfer failed, error!"%card_info["username"])
     return None
 def calculate(amount,change,type,interest):
     '''

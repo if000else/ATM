@@ -38,7 +38,7 @@ def login():
             print(item)##########
         username = input("\033[1;33;1mPlease input username:\033[0m")
         username = username.strip()
-        log.logger("access").info("User %s attempts to login!" % username)
+        log.set_log("access",20,"User %s attempts to login!"%username)
         if username in all_userdata.keys():
             userdata = all_userdata[username] # get specific user
             psd = input("\033[1;33;1mPlease input password:\033[0m")
@@ -47,18 +47,18 @@ def login():
                 if userdata["locked"]:#locked
                     print("\033[1;31;1m User has been locked!!\033[0m")
                 else:
-                    log.logger("access").info("User %s  login successfully!" % username)
+                    log.set_log("access",20,"User %s  login successfully!" % username)
                     print("\033[1;33;1m Login accept!\033[0m")
                     return userdata
             else: #password is incorrect
                 colordisplay("password is incorrect!","red")
-                log.logger("access").info("User %s failed to login!" % username)
+                log.set_log("access",20,"User %s failed to login!" % username)
                 if count[1] == username:# tha same user
                     count[0] += 1
                     if count[0] >= 3:#more than 3 times
                         colordisplay("User %s is locked because of attempting too many times!","red")
                         api_func.db_hander("modify","user_info",all_userdata)# write in file
-                        log.logger("access").info("User %s is locked because of attempting too many times!" % username)
+                        log.set_log("access",20,"User %s is locked because of attempting too many times!" % username)
                 else:# another user
                     count[1] = username
                     count[0] += 1

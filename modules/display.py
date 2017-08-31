@@ -32,13 +32,13 @@ b.Back
 shop_list = '''
 ---------Life Store-----------
 1001.Love          999.00  RMB
-1002.Knowledge    1000.00  RMB
+1002.Knowledge    899.00  RMB
 1003.Health       1000.00  RMB
 1004.Luck          666.00  RMB
-1005.Honor         200.00  RMB
-1006.Friendship    500.00  RMB
-1007.Family        600.00  RMB
-1008.Relationship  999.00  RMB
+1005.Honor         199.00  RMB
+1006.Friendship    399.00  RMB
+1007.Family        599.00  RMB
+1008.Relationship  299.00  RMB
 1009.RP            9.00    RMB
 
 

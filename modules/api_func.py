@@ -52,12 +52,13 @@ def db_hander(actions,filename,dic_data = None):
 
 
 
-def gene_order(price,shop_car,username):
+def gene_order(price,shop_car,username,save=False):
     '''
-    generate order and save to file
-    :param price:
-    :param items: dic of items
+    generate order_num and save to file according save flag
+    :param price: total price of order,float
+    :param shop_car: dic
     :param username:
+    :param save: true or false
     :return:
     '''
     import time
@@ -66,18 +67,26 @@ def gene_order(price,shop_car,username):
     time_create = time.strftime("%Y-%m-%d %H:%M:%S")
     string = '60088'
     order_num = string+timestring
-    path = "%s/order.txt"%PathOfReport
-    with open(path,'a') as f:# time + order num + price
-        f.write(time_create+' '+order_num+' '+price+' '+username+'\n')
+    path = "%s/order.txt" % PathOfReport
+    with open(path, 'a') as f:  # time + order num + price + username
+        f.write(time_create + ' ' + order_num + ' ' + price + ' ' + username + '\n')
         f.write("Details:\n")
         for item in shop_car.values():
-            f.write(item["number"]+'--'+str(item["price"])+'--'+str(item["amount"])+'\n')
+            f.write(item["number"] + '--' + str(item["price"]) + '--' + str(item["amount"]) + '\n')
     path_order = "%s/%sBill.txt" % (PathOfReport, username)
-    with open(path_order,'a+') as f1:
-        f1.write(time_create+' '+ order_num+' '+username+'\n')
+    with open(path_order, 'a+') as f1:
+        f1.write(time_create + ' ' + order_num + ' ' + username + price + 'yuan\n')
         print("Order have write in  user file!")
-
     return order_num
+def pay_state(order_num):
+    '''
+    change the state of order num,pay or not.
+    :param ordernum:
+    :return:
+    '''
+    path = "%s/order.txt" % PathOfReport
+
+
 def see_bill(username):
     '''
     display user bill

@@ -49,8 +49,8 @@ def shopping(autu_tool):
                 print("Generating order...")
                 order_num = api_func.gene_order(total,shop_car,autu_tool["name"])
                 print("Skipping to payment...")
-                pay_flay = main.store_payment(order_num,total,autu_tool["name"])# call payment
-                if  pay_flay:# pay success
+                pay_flag = main.store_payment(order_num,total,autu_tool["name"])# call payment
+                if  pay_flag:# pay success
                     shop_car.clear()# clear shop car
                 else:
                     print("Pay failed,please check!")
